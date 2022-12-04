@@ -7,6 +7,7 @@ namespace forum_apis.Models
 {
     public class comment
     {
+        public int cid { get; set; }
         public int postid { get; set; }
         public int userid { get; set; }
         public string cmnt { get; set; }

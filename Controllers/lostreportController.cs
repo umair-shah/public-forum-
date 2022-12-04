@@ -121,7 +121,7 @@ namespace forum_apis.Controllers
             return Ok(posts);
         }
         [HttpGet]
-        public IHttpActionResult getlostreport(int id)
+        public IHttpActionResult getuserslostreport(int id)
         {
             string connectionInfo = System.Configuration.ConfigurationManager.AppSettings["ConnectionInfo"].ToString();
 
@@ -153,6 +153,41 @@ namespace forum_apis.Controllers
                         }
                         con.Close();
 
+                    }
+                }
+            }
+            return Ok(posts);
+        }
+        [HttpGet]
+        public IHttpActionResult getlivelostreports(int id)
+        {
+            string connectionInfo = System.Configuration.ConfigurationManager.AppSettings["ConnectionInfo"].ToString();
+
+            List<lrpost> posts = new List<lrpost>();
+            string query = "select * from post as p  join lostreport as lp  on (p.postid= lp.postid ) join fusers as u on(p.userid=u.userid) where p.postid > @uid";
+            using (SqlConnection con = new SqlConnection(connectionInfo))
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@uid", id);
+
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            lrpost dum = new lrpost();
+                            dum.postid = Convert.ToInt32(sdr["postid"]);
+                            dum.details = Convert.ToString(sdr["details"]);
+                            dum.lostitem = Convert.ToString(sdr["lostitem"]);
+                            dum.ptime = Convert.ToDateTime(sdr["ptime"]);
+                            dum.username = Convert.ToString(sdr["username"]);
+                            dum.email = Convert.ToString(sdr["email"]);
+                            dum.designation = Convert.ToString(sdr["designation"]);
+                            posts.Add(dum);
+                        }
+                        con.Close();
                     }
                 }
             }

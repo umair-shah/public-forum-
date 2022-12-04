@@ -123,7 +123,7 @@ namespace forum_apis.Controllers
             }
 
             [HttpGet]
-            public IHttpActionResult getgeneraldiscussion(int id)
+            public IHttpActionResult getusergeneraldiscussion(int id)
             {
                 string connectionInfo = System.Configuration.ConfigurationManager.AppSettings["ConnectionInfo"].ToString();
 
@@ -160,6 +160,43 @@ namespace forum_apis.Controllers
                 }
                 return Ok(posts);
             }
+        [HttpGet]
+        public IHttpActionResult getlivegeneraldiscussion(int id)
+        {
+            string connectionInfo = System.Configuration.ConfigurationManager.AppSettings["ConnectionInfo"].ToString();
+
+            List<gdpost> posts = new List<gdpost>();
+            string query = "select * from post as p  join generaldiscussion as gd  on (p.postid= gd.postid ) join fusers as u on(p.userid=u.userid) where p.postid > @uid";
+            using (SqlConnection con = new SqlConnection(connectionInfo))
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@uid", id);
+
+                    con.Open();
+
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+                            gdpost dum = new gdpost();
+                            dum.postid = Convert.ToInt32(sdr["postid"]);
+                            dum.details = Convert.ToString(sdr["details"]);
+                            dum.topic = Convert.ToString(sdr["topic"]);
+                            dum.ptime = Convert.ToDateTime(sdr["ptime"]);
+                            dum.username = Convert.ToString(sdr["username"]);
+                            dum.email = Convert.ToString(sdr["email"]);
+                            dum.designation = Convert.ToString(sdr["designation"]);
+                            posts.Add(dum);
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            return Ok(posts);
         }
+    }
     }
 

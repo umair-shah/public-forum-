@@ -24,6 +24,52 @@ namespace forum_apis.Controllers
                 {
                     cmd.Connection = con;
                     cmd.Parameters.AddWithValue("@id", id);
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        usercomment dum = null;
+                        while (sdr.Read())
+                        {
+                            dum = new usercomment();
+
+                            dum.comments = (new comment
+                            {
+                                cid= Convert.ToInt32(sdr["cid"]),
+                                postid = Convert.ToInt32(sdr["postid"]),
+                                userid = Convert.ToInt32(sdr["userid"]),
+                                cmnt = Convert.ToString(sdr["cmnt"]),
+                                ctime = Convert.ToDateTime(sdr["ctime"])
+                            });
+                            dum.userdetail = (new user
+                            {
+                                userid = Convert.ToInt32(sdr["userid"]),
+                                username = Convert.ToString(sdr["username"]),
+                                designation = Convert.ToString(sdr["designation"]),
+                                email = Convert.ToString(sdr["email"])
+                            });
+                            uc.Add(dum);
+                            dum = null;
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            return Ok(uc);
+        }
+        [HttpGet]
+        public IHttpActionResult getlivecomments(int pid,int lcid)
+        {
+            string connectionInfo = System.Configuration.ConfigurationManager.AppSettings["ConnectionInfo"].ToString();
+            List<usercomment> uc = new List<usercomment>();
+            string query = "select * from comments as c  join fusers as u  on (c.userid= u.userid) where c.postid=@id and c.cid > @lcid";
+            using (SqlConnection con = new SqlConnection(connectionInfo))
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@id", pid);
+                    cmd.Parameters.AddWithValue("@lcid", lcid);
+
 
                     con.Open();
                     using (SqlDataReader sdr = cmd.ExecuteReader())
@@ -88,7 +134,7 @@ namespace forum_apis.Controllers
                     }
                 }
             }
-            return Ok();
+            return Ok("good");
         }
     }
 }

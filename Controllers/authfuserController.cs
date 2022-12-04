@@ -17,7 +17,7 @@ namespace forum_apis.Controllers
             public string password;
         }
         [HttpPost]
-        public IHttpActionResult authfuser(loginuser user)
+        public IHttpActionResult authloginuser(loginuser user)
         {
             string connectionInfo = System.Configuration.ConfigurationManager.AppSettings["ConnectionInfo"].ToString();
             int userid = -1;

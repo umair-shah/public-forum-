@@ -9,7 +9,6 @@ using forum_apis.Models;
 
 namespace forum_apis.Controllers
 {
-
     public class fuserController : ApiController
     {
         [HttpGet]
