@@ -39,7 +39,6 @@ namespace forum_apis.Controllers
                     }
                 }
                 con.Close();
-
             }
             if (userid > -1)
             {

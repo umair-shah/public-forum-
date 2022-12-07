@@ -43,7 +43,6 @@ namespace forum_apis.Controllers
         [HttpPost]
         public IHttpActionResult postnewuser(user newuser)
         {
-            //string CS = "Server=.;Database=IPTFORUM;User Id=sa;Password=abc";
             string connectionInfo = System.Configuration.ConfigurationManager.AppSettings["ConnectionInfo"].ToString();
 
             using (SqlConnection con = new SqlConnection(connectionInfo))
