@@ -81,6 +81,7 @@ namespace forum_apis.Controllers
 
                             dum.comments = (new comment
                             {
+                                cid= Convert.ToInt32(sdr["cid"]),
                                 postid = Convert.ToInt32(sdr["postid"]),
                                 userid = Convert.ToInt32(sdr["userid"]),
                                 cmnt = Convert.ToString(sdr["cmnt"]),
@@ -88,6 +89,7 @@ namespace forum_apis.Controllers
                             });
                             dum.userdetail = (new user
                             {
+
                                 userid = Convert.ToInt32(sdr["userid"]),
                                 username = Convert.ToString(sdr["username"]),
                                 designation = Convert.ToString(sdr["designation"]),
